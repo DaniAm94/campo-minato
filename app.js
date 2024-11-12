@@ -6,8 +6,10 @@ const app = express();
 //I router
 const users = require("./routers/users.js");
 
+app.use(express.json());
 
-app.use('/auth', users);
+
+app.use('/users', users);
 
 
 

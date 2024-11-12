@@ -1,10 +1,10 @@
 
 
 module.exports = {
-    register: () => {
+    register: (req, res) => {
         res.status(200).json("sono la registrazione");
     },
-    login: () => {
+    login: (req, res) => {
         res.status(200).json("sono il login");
     }
 }
