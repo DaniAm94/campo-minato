@@ -2,7 +2,6 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const { hashPassword, comparePassword } = require("../utils/password.js");
-const generateToke = require("../utils/generateToken.js");
 const generateToken = require("../utils/generateToken.js");
 
 module.exports = {
@@ -36,13 +35,48 @@ module.exports = {
             res.json({ token, user });
 
         } catch (err) {
+            // In caso di errore mostro l'errore in console e lo invio nella response
             console.error(err);
             const statusCode = err.statusCode || 500;
             const message = err.customMessage || 'Server error';
             return res.status(statusCode).send(message);
         }
     },
-    login: (req, res) => {
-        res.status(200).json("sono il login");
+    login: async (req, res) => {
+
+        // Recupero i dati dal body della request
+        const { email, password } = req.body;
+        try {
+
+            // Cerco l'utente nel db
+            const user = await prisma.user.findUnique({ where: { email } })
+
+            const loginError = new Error("Email o password errati.", 400);
+            // Se l'utente non viene trovato lancio un errore
+            if (!user) {
+                throw loginError;
+            }
+
+            // Controllo la passowrd
+            const isPasswordValid = await comparePassword(password, user.password);
+            if (!isPasswordValid) throw loginError;
+
+            const data = {
+                email: user.email,
+                nickname: user.nickname
+            }
+
+            // Genero il token
+            const token = generateToken(data);
+
+            // Invio la risposta in json
+            res.json({ token, data });
+        } catch (err) {
+            // In caso di errore mostro l'errore in console e lo invio nella response
+            console.error(err);
+            const statusCode = err.statusCode || 500;
+            const message = err.customMessage || 'Server error';
+            return res.status(statusCode).send(message);
+        }
     }
 }
