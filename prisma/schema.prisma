@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum GameStatus {
+  IN_CORSO
+  Vinta
+  PERSA
+  ANNULLATA
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nickname  String   @unique
+  email     String   @unique
+  password  String
+  games     Game[] // lista delle partite del giocatore(sia concluse che in corso)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Game {
+  id        Int        @id @default(autoincrement())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  grid      Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
+  gridId    Int?
+  status    GameStatus @default(IN_CORSO) // stato attuale della partita(vinta, persa, in corso)
+  startTime DateTime   @default(now()) // data e ora inizio
+  endTime   DateTime? // data e ora fine
+  updatedAt DateTime   @updatedAt
+}
+
+model Grid {
+  id        Int    @id @default(autoincrement())
+  game      Game   @relation(fields: [gameId], references: [id], name: "GameToGrid")
+  gameId    Int    @unique // la partita di riferimento
+  cells     Cell[]
+  width     Int // numero di colonne
+  height    Int // numero di righe
+  mineCount Int // numero di mine
+}
+
+model Cell {
+  id            Int     @id @default(autoincrement())
+  grid          Grid    @relation(fields: [gridId], references: [id])
+  gridId        Int
+  row           Int // indice di riga
+  column        Int // indice di colonna
+  isMine        Boolean @default(false)
+  adjacentMines Int // numero di mine adiacente (nelle 8 celle circostanti)
+  revealed      Boolean @default(false) // indica se la cella è stata rivelata o no
+  flagged       Boolean @default(false) // indica se la cella è stata marcata come sospetta
+}
