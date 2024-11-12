@@ -1,0 +1,21 @@
+{
+  "name": "campo-minato",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "prisma migrate dev --name",
+    "start": "nodemon app.js"
+  },
+  "author": "Danilo Amico",
+  "license": "ISC",
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.7"
+  }
+}
