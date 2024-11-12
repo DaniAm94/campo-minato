@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 const { hashPassword, comparePassword } = require("../utils/password.js");
 const generateToken = require("../utils/generateToken.js");
 
+const errorHandlerFunction = require("../utils/errorHandlerFunction.js");
+
 module.exports = {
     register: async (req, res) => {
 
@@ -35,11 +37,7 @@ module.exports = {
             res.json({ token, user });
 
         } catch (err) {
-            // In caso di errore mostro l'errore in console e lo invio nella response
-            console.error(err);
-            const statusCode = err.statusCode || 500;
-            const message = err.customMessage || 'Server error';
-            return res.status(statusCode).send(message);
+            errorHandlerFunction(res, err);
         }
     },
     login: async (req, res) => {
@@ -72,11 +70,7 @@ module.exports = {
             // Invio la risposta in json
             res.json({ token, data });
         } catch (err) {
-            // In caso di errore mostro l'errore in console e lo invio nella response
-            console.error(err);
-            const statusCode = err.statusCode || 500;
-            const message = err.customMessage || 'Server error';
-            return res.status(statusCode).send(message);
+            errorHandlerFunction(res, err);
         }
     }
 }
