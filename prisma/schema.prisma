@@ -15,7 +15,7 @@ datasource db {
 
 enum GameStatus {
   IN_CORSO
-  Vinta
+  VINTA
   PERSA
   ANNULLATA
 }
