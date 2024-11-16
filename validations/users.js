@@ -23,6 +23,16 @@ const registerBody = {
                 return true;
             }
         }
+    },
+    password: {
+        in: ["body"],
+        notEmpty: {
+            errorMessage: 'Password è un campo obbligatorio.',
+            bail: true
+        },
+        isString: {
+            errorMessage: 'Password deve essere una stringa.',
+        }
     }
 }
 
