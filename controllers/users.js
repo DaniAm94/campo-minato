@@ -6,6 +6,8 @@ const generateToken = require("../utils/generateToken.js");
 
 const errorHandlerFunction = require("../utils/errorHandlerFunction.js");
 
+const slugify = require("slugify");
+
 module.exports = {
     register: async (req, res) => {
 
@@ -17,6 +19,7 @@ module.exports = {
             const data = {
                 email,
                 nickname,
+                slug: slugify(nickname),
                 password: await hashPassword(password)
             }
 
