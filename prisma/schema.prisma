@@ -14,10 +14,17 @@ datasource db {
 }
 
 enum GameStatus {
-  IN_CORSO
-  VINTA
-  PERSA
-  ANNULLATA
+  IN_PROGRESS
+  WON
+  LOST
+  CANCELLED
+}
+
+enum GameLevels {
+  EASY
+  MEDIUM
+  HARD
+  CUSTOM
 }
 
 model User {
@@ -31,15 +38,16 @@ model User {
 }
 
 model Game {
-  id        Int        @id @default(autoincrement())
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
-  grid      Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
-  gridId    Int?
-  status    GameStatus @default(IN_CORSO) // stato attuale della partita(vinta, persa, in corso)
-  startTime DateTime   @default(now()) // data e ora inizio
-  endTime   DateTime? // data e ora fine
-  updatedAt DateTime   @updatedAt
+  id         Int        @id @default(autoincrement())
+  user       User       @relation(fields: [userId], references: [id])
+  userId     Int
+  grid       Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
+  gridId     Int?
+  status     GameStatus @default(IN_PROGRESS) // stato attuale della partita(vinta, persa, in corso)
+  difficulty GameLevels // difficoltà della partita
+  startTime  DateTime   @default(now()) // data e ora inizio
+  endTime    DateTime? // data e ora fine
+  updatedAt  DateTime   @updatedAt
 }
 
 model Grid {
