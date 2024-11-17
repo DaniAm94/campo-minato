@@ -29,7 +29,8 @@ module.exports = {
             // Genero il token
             const token = generateToken({
                 email: user.email,
-                nickname: user.nickname
+                nickname: user.nickname,
+                slug: user.slug
             });
 
             // Preparo l'oggetto user per la respons, rimuovo campi non utili all'utente
@@ -64,7 +65,8 @@ module.exports = {
 
             const data = {
                 email: user.email,
-                nickname: user.nickname
+                nickname: user.nickname,
+                slug: user.slug
             }
 
             // Genero il token
