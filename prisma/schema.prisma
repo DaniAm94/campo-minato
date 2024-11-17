@@ -30,6 +30,7 @@ enum GameLevels {
 model User {
   id        Int      @id @default(autoincrement())
   nickname  String   @unique
+  slug      String   @unique
   email     String   @unique
   password  String
   games     Game[] // lista delle partite del giocatore(sia concluse che in corso)
