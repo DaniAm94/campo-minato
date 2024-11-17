@@ -13,13 +13,13 @@ module.exports = (req, res, next) => {
 
     // Se non è presente lancia un errore e blocca la richiesta
     if (!token) {
-        throw new RestError("Token non fornito", 401);
+        return next(new Error("Token non fornito", 401));
     }
 
     // Verifica la validità del token usando la chiave di decriptazione nel file .env
     jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
         if (err) {
-            throw new Error("Token non valido", 403);
+            return next(new Error("Token non valido", 403));
         }
 
         req.user = data;
