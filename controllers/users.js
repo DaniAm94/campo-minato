@@ -28,6 +28,7 @@ module.exports = {
 
             // Genero il token
             const token = generateToken({
+                id: user.id,
                 email: user.email,
                 nickname: user.nickname,
                 slug: user.slug
@@ -64,6 +65,7 @@ module.exports = {
             if (!isPasswordValid) throw loginError;
 
             const data = {
+                id: user.id,
                 email: user.email,
                 nickname: user.nickname,
                 slug: user.slug
