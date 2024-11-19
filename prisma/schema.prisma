@@ -40,7 +40,7 @@ model User {
 
 model Game {
   id         Int        @id @default(autoincrement())
-  user       User       @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int
   grid       Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
   gridId     Int?
@@ -53,7 +53,7 @@ model Game {
 
 model Grid {
   id        Int    @id @default(autoincrement())
-  game      Game   @relation(fields: [gameId], references: [id], name: "GameToGrid")
+  game      Game   @relation(fields: [gameId], references: [id], name: "GameToGrid", onDelete: Cascade)
   gameId    Int    @unique // la partita di riferimento
   cells     Cell[]
   width     Int // numero di colonne
@@ -63,7 +63,7 @@ model Grid {
 
 model Cell {
   id            Int     @id @default(autoincrement())
-  grid          Grid    @relation(fields: [gridId], references: [id])
+  grid          Grid    @relation(fields: [gridId], references: [id], onDelete: Cascade)
   gridId        Int
   row           Int // indice di riga
   column        Int // indice di colonna
