@@ -8,7 +8,9 @@ const validator = require("../middlewares/validator.js");
 
 // Rotte
 
-router.post('/', games.create);  // crea una partita
+router.get('/', games.index) // lista partite
+
+router.post('/', games.store);  // crea una partita
 
 
 module.exports = router;
