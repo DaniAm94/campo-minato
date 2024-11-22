@@ -148,6 +148,7 @@ module.exports = {
             errorHandlerFunction(res, err);
         }
     },
+    updateStatus: async (req, res) => { },
     resume: async (req, res) => {
 
         // Recupero il game id dai parametri della request
