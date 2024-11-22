@@ -5,6 +5,8 @@ const generateCells = require("../utils/generateCells.js");
 const prisma = new PrismaClient();
 
 module.exports = {
+
+    // Metodo che restituisce la lista delle partite
     index: async (req, res) => {
 
         // Prelevo l'id dell'utente dalla request
@@ -26,6 +28,8 @@ module.exports = {
         }
 
     },
+
+    // Metodo che crea una nuova partita
     store: async (req, res) => {
 
         const { difficulty } = req.body;
@@ -88,6 +92,8 @@ module.exports = {
         }
 
     },
+
+    // Metodo che restituisce i dettagli di una partita
     show: async (req, res) => {
         const gameId = parseInt(req.params.id);
         try {
@@ -148,7 +154,11 @@ module.exports = {
             errorHandlerFunction(res, err);
         }
     },
+
+    // Metodo che aggiorna lo status di una partita
     updateStatus: async (req, res) => { },
+
+    // Metodo per riprendere una partita con status IN_PROGRESS
     resume: async (req, res) => {
 
         // Recupero il game id dai parametri della request
