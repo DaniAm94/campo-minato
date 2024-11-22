@@ -87,5 +87,45 @@ module.exports = {
             errorHandlerFunction(res, err)
         }
 
+    },
+    resume: async (req, res) => {
+
+        // Recupero il game id dai parametri della request
+        const gameId = parseInt(req.params.id);
+        try {
+            // Recupero la partita dal db
+            const game = await prisma.game.findUnique({
+                where: {
+                    id: gameId
+                },
+                include: {
+                    // Griglia
+                    grid: {
+                        select: {
+                            width: true,
+                            height: true,
+                            mineCount: true,
+                            // Celle
+                            cells: {
+                                select: {
+                                    id: true,
+                                    row: true,
+                                    column: true,
+                                    isMine: true,
+                                    adjacentMines: true,
+                                    revealed: true,
+                                    flagged: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+            res.status(200).json(game);
+
+        } catch (err) {
+            errorHandlerFunction(res, err)
+        }
     }
 }
