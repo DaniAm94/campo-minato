@@ -10,9 +10,13 @@ const validator = require("../middlewares/validator.js");
 
 router.get('/', games.index); // lista partite
 
+router.get('/:id', games.show); // restituisce i dettagli di una partita
+
 router.post('/', games.store);  // crea una partita
 
 router.get('/:id/in-progress', games.resume); // riprende una partita in corso
+
+
 
 
 module.exports = router;
