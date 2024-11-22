@@ -37,7 +37,7 @@ module.exports = {
         try {
 
             // Rendo la creazione di game, grid e cells un'operazione atomica. Se una fallisce, falliscono tutte
-            const { game, grid } = await prisma.$transaction(async (prisma) => {
+            const { game, grid, cells } = await prisma.$transaction(async (prisma) => {
 
                 // Creazione partita
                 const game = await prisma.game.create({ data: gameData })
@@ -54,17 +54,33 @@ module.exports = {
                 });
 
                 // Creazione celle
-                const cells = generateCells(grid.id, grid.height, grid.width, grid.mineCount);
+                const newCells = generateCells(grid.id, grid.height, grid.width, grid.mineCount);
                 // Salvataggio celle nel database
-                await prisma.cell.createMany({ data: cells, skipDuplicates: true });
+                await prisma.cell.createMany({ data: newCells, skipDuplicates: true });
 
-                return { game, grid };
+                // Recupero celle da inviare nella response
+                const cells = await prisma.cell.findMany({
+                    where: {
+                        gridId: grid.id
+                    },
+                    select: {
+                        id: true,
+                        row: true,
+                        column: true,
+                        isMine: true,
+                        adjacentMines: true,
+                        revealed: true,
+                        flagged: true
+                    }
+                })
+                return { game, grid, cells };
             })
 
             return res.status(201).json({
                 message: 'Partita creata con successo!',
                 game: { ...game, gridId: grid.id },
                 grid,
+                cells
             });
 
         } catch (err) {
