@@ -88,6 +88,66 @@ module.exports = {
         }
 
     },
+    show: async (req, res) => {
+        const gameId = parseInt(req.params.id);
+        try {
+
+            // Informazioni partita
+            const game = await prisma.game.findUnique({
+                where: {
+                    id: gameId
+                },
+                include: {
+                    grid: {
+                        include: {
+                            cells: {
+                                select: {
+                                    id: true,
+                                    row: true,
+                                    column: true,
+                                    isMine: true,
+                                    adjacentMines: true,
+                                    revealed: true,
+                                    flagged: true
+                                }
+                            }
+                        }
+                    },
+                }
+            })
+
+            // Conteggio celle flaggate
+            const flaggedCells = await prisma.cell.aggregate({
+                where: {
+                    gridId: game.grid.id,
+                    flagged: true
+                },
+                _count: { id: true }
+            })
+
+            // Conteggio celle rivelate
+            const revealedCells = await prisma.cell.aggregate({
+                where: {
+                    gridId: game.grid.id,
+                    revealed: true
+                },
+                _count: { id: true }
+            })
+
+            res.status(200).json({
+                ...game,
+                grid: {
+                    ...game.grid,
+                    cellCounts: {
+                        flaggedCells: flaggedCells._count.id,
+                        revealedCells: revealedCells._count.id
+                    }
+                }
+            })
+        } catch (err) {
+            errorHandlerFunction(res, err);
+        }
+    },
     resume: async (req, res) => {
 
         // Recupero il game id dai parametri della request
