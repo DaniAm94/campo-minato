@@ -39,16 +39,18 @@ model User {
 }
 
 model Game {
-  id         Int        @id @default(autoincrement())
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
-  grid       Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
-  gridId     Int?
-  status     GameStatus @default(IN_PROGRESS) // stato attuale della partita(vinta, persa, in corso)
-  difficulty GameLevels // difficoltà della partita
-  startTime  DateTime   @default(now()) // data e ora inizio
-  endTime    DateTime? // data e ora fine
-  updatedAt  DateTime   @updatedAt
+  id          Int        @id @default(autoincrement())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  grid        Grid?      @relation(name: "GameToGrid") // La griglia usata nella partita
+  gridId      Int?
+  status      GameStatus @default(IN_PROGRESS) // stato attuale della partita(vinta, persa, in corso)
+  difficulty  GameLevels // difficoltà della partita
+  startTime   DateTime   @default(now()) // data e ora inizio
+  pauseTime   DateTime? // data e ora pausa partita
+  endTime     DateTime? // data e ora fine
+  elapsedTime Int        @default(0) // tempo trascorso in millisecondi
+  updatedAt   DateTime   @updatedAt
 }
 
 model Grid {
