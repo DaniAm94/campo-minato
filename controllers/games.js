@@ -178,6 +178,21 @@ module.exports = {
         }
     },
 
+    // Metodo per cancellare una partita
+    destroy: async (req, res) => {
+        const gameId = parseInt(req.params.gameId);
+
+        try {
+            await prisma.game.delete({ where: { id: gameId } });
+            res.status(200).json({
+                Message: `Partita con id ${gameId} cancellata con successo`
+            })
+
+        } catch (err) {
+            errorHandlerFunction(res, err);
+        }
+    },
+
     // Metodo per riprendere una partita con status IN_PROGRESS
     resume: async (req, res) => {
 
