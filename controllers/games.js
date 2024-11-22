@@ -95,7 +95,7 @@ module.exports = {
 
     // Metodo che restituisce i dettagli di una partita
     show: async (req, res) => {
-        const gameId = parseInt(req.params.id);
+        const gameId = parseInt(req.params.gameId);
         try {
 
             // Informazioni partita
@@ -125,7 +125,7 @@ module.exports = {
             // Conteggio celle flaggate
             const flaggedCells = await prisma.cell.aggregate({
                 where: {
-                    gridId: game.grid.id,
+                    gridId: game.gridId,
                     flagged: true
                 },
                 _count: { id: true }
@@ -134,7 +134,7 @@ module.exports = {
             // Conteggio celle rivelate
             const revealedCells = await prisma.cell.aggregate({
                 where: {
-                    gridId: game.grid.id,
+                    gridId: game.gridId,
                     revealed: true
                 },
                 _count: { id: true }
@@ -162,7 +162,7 @@ module.exports = {
     resume: async (req, res) => {
 
         // Recupero il game id dai parametri della request
-        const gameId = parseInt(req.params.id);
+        const gameId = parseInt(req.params.gameId);
         try {
             // Recupero la partita dal db
             const game = await prisma.game.findUnique({
