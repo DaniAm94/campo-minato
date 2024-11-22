@@ -156,7 +156,27 @@ module.exports = {
     },
 
     // Metodo che aggiorna lo status di una partita
-    updateStatus: async (req, res) => { },
+    updateStatus: async (req, res) => {
+        const { status } = req.body;
+        const gameId = parseInt(req.params.gameId);
+
+        try {
+            await prisma.game.update({
+                where: {
+                    id: gameId
+                },
+                data: {
+                    status
+                }
+            })
+            res.status(200).json({
+                Message: `Status della partita con id ${gameId} aggiornato con successo`
+            })
+
+        } catch (err) {
+            errorHandlerFunction(res, err);
+        }
+    },
 
     // Metodo per riprendere una partita con status IN_PROGRESS
     resume: async (req, res) => {
