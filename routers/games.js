@@ -2,12 +2,17 @@ const express = require("express");
 
 const router = express.Router();
 
+
+// Controller dei game
 const games = require("../controllers/games.js");
 
+// Router delle celle
 const cells = require("./cells.js");
 
+// Validatore
 const validator = require("../middlewares/validator.js");
 
+// Regole di validazione
 const { paramsId, bodyDifficulty, bodyStatus } = require("../validations/games.js");
 
 // Rotte
