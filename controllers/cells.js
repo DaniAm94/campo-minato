@@ -8,7 +8,7 @@ module.exports = {
     // Metodo che setta l'attributo revealed di una cell a true
     reveal: async (req, res) => {
 
-        const id = parseInt(req.params.cellId);
+        const id = req.params.cellId;
 
         try {
 
@@ -21,7 +21,7 @@ module.exports = {
                 }
             })
 
-            res.status(200).json("Cella rivelata con successo")
+            res.status(200).json(`Cella rivelata con successo, cella: ${id}`)
         } catch (err) {
             errorHandlerFunction(res, err)
         }
@@ -30,7 +30,7 @@ module.exports = {
     // Metodo che toggola l'attributo flagged di una cell
     flag: async (req, res) => {
 
-        const id = parseInt(req.params.cellId);
+        const id = req.params.cellId;
 
         try {
 
@@ -42,7 +42,7 @@ module.exports = {
                 WHERE id = ${id}
                 `;
 
-            res.status(200).json("Cella flaggata con successo")
+            res.status(200).json(`Cella flaggata con successo, cella: ${id}`)
         } catch (err) {
             errorHandlerFunction(res, err);
         }
