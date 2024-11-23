@@ -61,7 +61,7 @@ module.exports = {
                 // Creazione celle
                 const newCells = generateCells(grid.id, grid.height, grid.width, grid.mineCount);
                 // Salvataggio celle nel database
-                await prisma.cell.createMany({ data: newCells, skipDuplicates: true });
+                await prisma.cell.createMany({ data: newCells });
 
                 // Recupero celle da inviare nella response
                 const cells = await prisma.cell.findMany({
@@ -273,7 +273,73 @@ module.exports = {
             errorHandlerFunction(res, err)
         }
     },
-    restart: async (req, res, next) => {
 
+    // Metodo che riavvia una partita con status IN_PROGRESS
+    restart: async (req, res) => {
+        const { gameId: id } = req.params;
+
+        try {
+
+            // Riavvio la partita:
+            //  riporto startTime, elapsedTime e pauseTime ai valori di partenza
+            await prisma.game.update({
+                where: { id },
+                data: {
+                    startTime: new Date(),
+                    pauseTime: null,
+                    elapsedTime: 0
+                }
+            })
+            // Recupero la partita
+            const game = await prisma.game.findUnique({ where: { id } });
+
+
+            // Recupero la griglia
+            const grid = await prisma.grid.findUnique({
+                where: {
+                    id: game.gridId
+                }
+            })
+
+            // Cancello le celle
+            await prisma.cell.deleteMany({
+                where: {
+                    gridId: grid.id
+                }
+            })
+
+            // Ricreo le celle
+            const newCells = generateCells(grid.id, grid.height, grid.width, grid.mineCount)
+
+            // Le salvo nel db
+            await prisma.cell.createMany({
+                data: newCells
+            })
+
+            // Recupero celle da inviare nella response
+            const cells = await prisma.cell.findMany({
+                where: {
+                    gridId: grid.id
+                },
+                select: {
+                    id: true,
+                    row: true,
+                    column: true,
+                    isMine: true,
+                    adjacentMines: true,
+                    revealed: true,
+                    flagged: true
+                }
+            })
+
+            return res.status(200).json({
+                message: 'Partita riavviata con successo!',
+                game,
+                grid,
+                cells
+            });
+        } catch (err) {
+            errorHandlerFunction(res, err)
+        }
     }
 }
