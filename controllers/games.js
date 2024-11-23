@@ -4,6 +4,7 @@ const generateGrid = require("../utils/generateGrid.js");
 const generateCells = require("../utils/generateCells.js");
 const prisma = new PrismaClient();
 
+
 module.exports = {
 
     // Metodo che restituisce la lista delle partite
@@ -36,7 +37,7 @@ module.exports = {
         const userId = req.user.id;
         const gameData = {
             difficulty,
-            userId
+            userId,
         }
         try {
 
@@ -193,6 +194,44 @@ module.exports = {
         }
     },
 
+    // Metodo per mettere in pausa una partita con status IN_PROGRESS
+    pause: async (req, res) => {
+        const { gameId: id } = req.params;
+
+        try {
+
+            // Recupero la partita
+            const game = await prisma.game.findUnique({
+                where: {
+                    id
+                }
+            })
+
+            // Calcolo l'ora attuale
+            const now = new Date();
+
+            // Calcolo il tempo trascorso della partita
+            const elapsedTime = game.elapsedTime + Math.floor(now - (game.pauseTime || game.startTime));
+
+            // Aggiorno la partita
+            await prisma.game.update({
+                where: {
+                    id
+                },
+                data: {
+                    pauseTime: now,
+                    elapsedTime
+                }
+            })
+
+            res.status(200).json({
+                message: "La partita è stata messa in pausa"
+            })
+        } catch (err) {
+            errorHandlerFunction(res, err)
+        }
+    },
+
     // Metodo per riprendere una partita con status IN_PROGRESS
     resume: async (req, res) => {
 
@@ -233,5 +272,8 @@ module.exports = {
         } catch (err) {
             errorHandlerFunction(res, err)
         }
+    },
+    restart: async (req, res, next) => {
+
     }
 }
