@@ -95,7 +95,7 @@ module.exports = {
 
     // Metodo che restituisce i dettagli di una partita
     show: async (req, res) => {
-        const gameId = parseInt(req.params.gameId);
+        const { gameId } = req.params;
         try {
 
             // Informazioni partita
@@ -180,7 +180,7 @@ module.exports = {
 
     // Metodo per cancellare una partita
     destroy: async (req, res) => {
-        const gameId = parseInt(req.params.gameId);
+        const { gameId } = req.params;
 
         try {
             await prisma.game.delete({ where: { id: gameId } });
@@ -197,7 +197,7 @@ module.exports = {
     resume: async (req, res) => {
 
         // Recupero il game id dai parametri della request
-        const gameId = parseInt(req.params.gameId);
+        const { gameId } = req.params;
         try {
             // Recupero la partita dal db
             const game = await prisma.game.findUnique({
