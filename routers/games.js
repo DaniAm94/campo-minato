@@ -27,7 +27,11 @@ router.patch('/:gameId', [validator(paramsId), validator(bodyStatus)], games.upd
 
 router.delete('/:gameId', validator(paramsId), games.destroy) // cancella una partita
 
-router.get('/:gameId/in-progress', validator(paramsId), games.resume); // riprende una partita in corso
+router.patch('/:gameId/pause', validator(paramsId), games.pause); // mette in pausa una partita
+
+router.get('/:gameId/resume', validator(paramsId), games.resume); // riprende una partita in corso
+
+router.patch('/:gameId/restart', validator(paramsId), games.restart); // riavvia una partita in corso
 
 router.use('/:gameId/cells', validator(paramsId), cells) // rotte relative alle celle
 
