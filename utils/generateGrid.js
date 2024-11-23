@@ -1,3 +1,4 @@
+const RestError = require("./restError");
 
 /**
  * Funzione che genera una griglia di gioco
@@ -26,9 +27,9 @@ module.exports = (gameId, difficulty) => {
             break;
         case 'CUSTOM':
             // TODO da implementare
-            throw new Error('Non è al momento possibile creare una partita personalizzata');
+            throw new RestError('Non è al momento possibile creare una partita personalizzata');
         default:
-            throw new Error('Valore difficoltà non valido!');
+            throw new RestError('Valore difficoltà non valido!');
 
     }
     return {

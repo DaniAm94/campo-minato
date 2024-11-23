@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const RestError = require("../utils/restError");
 const prisma = new PrismaClient();
 
 const registerBody = {
@@ -18,7 +19,7 @@ const registerBody = {
                     where: { email: value }
                 });
                 if (user) {
-                    throw new Error("Esiste già un utente con questa email.")
+                    throw new RestError("Esiste già un utente con questa email.")
                 }
                 return true;
             }

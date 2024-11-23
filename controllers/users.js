@@ -7,6 +7,7 @@ const generateToken = require("../utils/generateToken.js");
 const errorHandlerFunction = require("../utils/errorHandlerFunction.js");
 
 const slugify = require("slugify");
+const RestError = require("../utils/restError.js");
 
 module.exports = {
     register: async (req, res) => {
@@ -54,7 +55,7 @@ module.exports = {
             // Cerco l'utente nel db
             const user = await prisma.user.findUnique({ where: { email } })
 
-            const loginError = new Error("Email o password errati.", 400);
+            const loginError = new RestError("Email o password errati.", 400);
             // Se l'utente non viene trovato lancio un errore
             if (!user) {
                 throw loginError;

@@ -1,4 +1,5 @@
 const { PrismaClient, GameLevels, GameStatus } = require("@prisma/client");
+const RestError = require("../utils/restError");
 const prisma = new PrismaClient();
 
 // Enum values come costanti per evitare calcoli ripetuti
@@ -19,7 +20,7 @@ const paramsId = {
             options: async (value) => {
                 const id = parseInt(value);
                 const game = await prisma.game.findUnique({ where: { id } });
-                if (!game) throw new Error(`La partita cercata non esiste, id: ${id}`);
+                if (!game) throw new RestError(`La partita cercata non esiste, id: ${id}`);
                 return true;
             }
         }
@@ -42,7 +43,7 @@ const bodyDifficulty = {
         custom: {
             options: (value) => {
                 if (!GAME_LEVELS.includes(value))
-                    throw new Error("Difficoltà non valida");
+                    throw new RestError("Difficoltà non valida");
                 return true
             }
         }
@@ -65,7 +66,7 @@ const bodyStatus = {
         custom: {
             options: (value) => {
                 if (!GAME_STATUS.includes(value))
-                    throw new Error("Status non valido");
+                    throw new RestError("Status non valido");
                 return true;
             }
         }

@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const RestError = require("../utils/restError");
 const prisma = new PrismaClient();
 
 
@@ -17,7 +18,7 @@ const paramsId = {
 
                 const cell = await prisma.cell.findUnique({ where: { id } });
 
-                if (!cell) throw new Error(`La cella cercata non esiste, id: ${id}`);
+                if (!cell) throw new RestError(`La cella cercata non esiste, id: ${id}`);
 
                 return true;
             }
