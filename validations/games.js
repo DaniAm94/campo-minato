@@ -19,7 +19,7 @@ const paramsId = {
             options: async (value) => {
                 const id = parseInt(value);
                 const game = await prisma.game.findUnique({ where: { id } });
-                if (!game) throw new Error("La partita cercata non esiste");
+                if (!game) throw new Error(`La partita cercata non esiste, id: ${id}`);
                 return true;
             }
         }
