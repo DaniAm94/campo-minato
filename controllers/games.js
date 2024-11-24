@@ -157,21 +157,37 @@ module.exports = {
     },
 
     // Metodo che aggiorna lo status di una partita
-    updateStatus: async (req, res) => {
+    end: async (req, res) => {
         const { status } = req.body;
-        const gameId = parseInt(req.params.gameId);
+        const { gameId: id } = req.params;
 
         try {
+            // Recupero la partita
+            const game = await prisma.game.findUnique({
+                where: {
+                    id
+                }
+            })
+
+            // Calcolo l'ora attuale
+            const now = new Date();
+
+            // Calcolo il tempo trascorso della partita
+            const elapsedTime = game.elapsedTime + Math.floor(now - (game.pauseTime || game.startTime));
+
+            // Aggiorno la partita
             await prisma.game.update({
                 where: {
-                    id: gameId
+                    id
                 },
                 data: {
-                    status
+                    status,
+                    endTime: now,
+                    elapsedTime
                 }
             })
             res.status(200).json({
-                Message: `Status della partita con id ${gameId} aggiornato con successo`
+                Message: `Status della partita con id ${id} aggiornato con successo a ${status}`
             })
 
         } catch (err) {
