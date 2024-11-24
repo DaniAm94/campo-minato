@@ -11,15 +11,14 @@ const GAME_STATUS = Object.values(GameStatus);
 const paramsId = {
     gameId: {
         in: ["params"],
+        toInt: true,
         isInt: {
             errorMessage: "L'id deve essere un numero intero",
             bail: true
         },
-        toInt: true,
         custom: {
             options: async (value) => {
-                const id = parseInt(value);
-                const game = await prisma.game.findUnique({ where: { id } });
+                const game = await prisma.game.findUnique({ where: { id: value } });
                 if (!game) throw new RestError(`La partita cercata non esiste, id: ${id}`);
                 return true;
             }
